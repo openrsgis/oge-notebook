@@ -1,6 +1,6 @@
 # Coverage类，包含元信息和image信息
 import metadata
-import image
+import oge_image
 
 
 class Coverage:
@@ -8,7 +8,7 @@ class Coverage:
 
     def __init__(self, coverage_metadata=None, coverage_image=None) -> None:
         self.__metadata: metadata.CoverageMetadata = coverage_metadata
-        self.image: image.Image = coverage_image
+        self.image: oge_image.Image = coverage_image
 
     def set_metadata(self, coverage_metadata: metadata.CoverageMetadata):
         """设置coverage的元信息
