@@ -1,11 +1,13 @@
 # 主要的处理函数
+
+from oge_cores import coverage
 # 调用处理
 def process(process_name: str, *args, **kwargs):
     pass
 
 
 # 获取图像
-def getCoverage(coverage_id):
+def getCoverage(coverage_id) -> coverage.Coverage:
     pass
 
 
