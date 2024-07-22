@@ -18,19 +18,20 @@ def check_image(func):
         func(*args, **kwargs)
 
     return wrapper
+
+
 class Image:
     """管理图像的File"""
 
-    def __init__(self, get_coverage_function=None, coverage_file: ogefiles.CoverageFile=None):
+    def __init__(
+        self, get_coverage_function=None, coverage_file: ogefiles.CoverageFile = None
+    ):
         self.__coverage_file: ogefiles.CoverageFile = coverage_file
 
         # 图像加载回调函数，使用闭包或偏函数的方式传入，在使用文件时调用
         self.__get_coverage_function = get_coverage_function
 
-
     @check_image
     def to_numpy_array(self):
         """转为np"""
         pass
-
-

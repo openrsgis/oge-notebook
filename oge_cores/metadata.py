@@ -1,4 +1,5 @@
 """元信息类"""
+
 from typing import List
 
 
@@ -73,7 +74,9 @@ class FeatureMetadata(Metadata):
         return self.__crs
 
 
-def get_coverage_metadata_from_service(product_Id: str, coverage_Id: str) -> CoverageMetadata:
+def get_coverage_metadata_from_service(
+    product_Id: str, coverage_Id: str
+) -> CoverageMetadata:
     """从Coverage服务获取元数据
 
     Args:
@@ -84,6 +87,7 @@ def get_coverage_metadata_from_service(product_Id: str, coverage_Id: str) -> Cov
         元数据
     """
     return "test"
+
 
 def get_coverage_metadata_from_file(path: str) -> CoverageMetadata:
     """从tiff文件中读取元数据
