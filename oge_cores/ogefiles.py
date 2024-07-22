@@ -20,9 +20,9 @@ class FilePointerDict:
             str: 文件路径
         """
         if file_name in self.__file_path_dict:
-            self.__file_path_dict[file_name] = 1
-        else:
             self.__file_path_dict[file_name] += 1
+        else:
+            self.__file_path_dict[file_name] = 1
 
     def remove_file_reference(self, file_name: str):
         """修改文件名
@@ -32,8 +32,8 @@ class FilePointerDict:
         """
         if file_name in self.__file_path_dict:
             self.__file_path_dict[file_name] -= 1
-        if self.__file_path_dict[file_name] <= 0:
-            self._del_file(file_name)
+            if self.__file_path_dict[file_name] <= 0:
+                self._del_file(file_name)
 
     # 删除文件
     def _del_file(self, file_name):
@@ -50,6 +50,7 @@ class InternalFile:
 
     def __init__(self, file_name: str) -> None:
         self.__file_path: str = file_name
+        file_pointer_dict.add_file_reference(file_name)
 
     @abstractmethod
     def read_file(self):
