@@ -1,7 +1,7 @@
 # Coverage类，包含元信息和image信息
-from oge_cores import metadata
-from oge_cores import oge_image
-from oge_cores import ogefiles
+from oge_cores.common import metadata
+from oge_cores.coverage import oge_image
+from oge_cores.common import ogefiles
 
 
 class Coverage:
@@ -59,7 +59,7 @@ class Coverage:
         self.__image.to_numpy_array()
 
 
-def get_coverage_file_from_service(product_Id: str, coverage_Id: str) -> str:
+def get_coverage_file_from_service(product_id: str, coverage_id: str) -> str:
     """从Coverage服务获取文件地址
 
     Args:
@@ -72,11 +72,12 @@ def get_coverage_file_from_service(product_Id: str, coverage_Id: str) -> str:
     return ""
 
 
-def get_coverage(product_Id: str, coverage_Id: str) -> Coverage:
+def get_coverage(product_id: str, coverage_id: str) -> Coverage:
+    """获取图像，以Coverage类的形式返回"""
     # TODO: 请求一次 or 请求两次？
     # TODO: 先不实现lazy加载的功能，等CoverageCollection相关函数完善时予以实现
-    file_path = get_coverage_file_from_service(product_Id, coverage_Id)
-    file_metadata = metadata.get_coverage_metadata_from_service(product_Id, coverage_Id)
+    file_path = get_coverage_file_from_service(product_id, coverage_id)
+    file_metadata = metadata.get_coverage_metadata_from_service(product_id, coverage_id)
 
     return Coverage(
         file_metadata, oge_image.Image(coverage_file=ogefiles.CoverageFile(file_path))

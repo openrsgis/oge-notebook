@@ -1,16 +1,17 @@
 # 主要的处理函数
 
-from oge_cores import coverage
+from oge_cores.coverage import coverage
+from oge_cores.processes import requester
 
 
 # 调用处理
 def process(process_name: str, *args, **kwargs):
-    pass
+    return requester.requester.process(process_name, *args, **kwargs)
 
 
 # 获取图像
-def getCoverage(coverage_id) -> coverage.Coverage:
-    pass
+def getCoverage(product_id, coverage_id) -> coverage.Coverage:
+    return coverage.get_coverage(product_id, coverage_id)
 
 
 # 获取CoverageCollection，这个要实现lazy加载，即筛选条件都先放进来的基础上，在真正使用数据时再读取
