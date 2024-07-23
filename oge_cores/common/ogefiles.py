@@ -41,6 +41,11 @@ class FilePointerDict:
             # os.remove(self.filePath)
             print(f"File {file_name} has been deleted.")
 
+    def get_file_num(self) -> int:
+        keys_with_positive_values = {k for k, v in self.__file_path_dict.items() if v > 0}
+        count = len(keys_with_positive_values)
+        return count
+
 
 file_pointer_dict = FilePointerDict()
 
