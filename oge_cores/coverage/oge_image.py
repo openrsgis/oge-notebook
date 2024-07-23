@@ -1,6 +1,6 @@
 """Image类，负责图像的lazy加载"""
 
-from oge_cores import ogefiles
+from oge_cores.common import ogefiles
 
 
 def check_image(func):
