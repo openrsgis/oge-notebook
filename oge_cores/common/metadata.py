@@ -86,7 +86,7 @@ def get_coverage_metadata_from_service(
     Returns:
         元数据
     """
-    return "test"
+    return CoverageMetadata()
 
 
 def get_coverage_metadata_from_file(path: str) -> CoverageMetadata:

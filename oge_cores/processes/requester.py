@@ -39,7 +39,7 @@ class Requester:
         """
         endpoint = self.get_models_endpoint(process_name)
         if endpoint is None:
-            raise KeyError(f"发生了一个错误，附加信息：{process_name} 算子服务不存在！")
+            raise KeyError(f"发生了一个错误：{process_name} 算子服务不存在！")
         service = Service(endpoint)
 
         inputs_formats = self.get_models_inputs(process_name)
