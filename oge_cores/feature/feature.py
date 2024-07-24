@@ -1,12 +1,12 @@
 # Feature类，包含属性信息和几何信息
 from osgeo import ogr
-from oge_cores import oge_geometry
-from oge_cores import ogefiles
+from oge_cores.feature import oge_geometry
+from oge_cores.common import ogefiles
 
 class Feature:
     """Feature类，包含几何信息和属性信息"""
 
-    def __init__(self, feature_crs=4326, feature_geometry=None, feature_attribute=None) -> None:
+    def __init__(self, feature_crs=4326, feature_attribute=None, feature_geometry=None) -> None:
         self.__geometry: oge_geometry.Geometry = feature_geometry
         self.__attribute: dict = feature_attribute
         self.__crs: int = feature_crs
@@ -95,6 +95,6 @@ def get_feature(product_Id: str) -> Feature:
     file_attribute = get_feature_attribute_from_service(product_Id)
     file_crs = get_feature_crs_from_service(product_Id)
     
-    return Feature(file_crs, ogefiles.FeatureFile(file_path), file_attribute)
+    return Feature(file_crs, file_attribute, oge_geometry.OGeometry(feature_file=ogefiles.FeatureFile(file_path)))
 
 
