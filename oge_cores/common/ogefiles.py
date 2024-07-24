@@ -37,9 +37,10 @@ class FilePointerDict:
 
     # 删除文件
     def _del_file(self, file_name):
-        if os.path.exists(file_name):
-            # os.remove(self.filePath)
-            print(f"File {file_name} has been deleted.")
+        if file_name is not None:
+            if os.path.exists(file_name):
+                # os.remove(self.filePath)
+                print(f"File {file_name} has been deleted.")
 
     def get_file_num(self) -> int:
         keys_with_positive_values = {k for k, v in self.__file_path_dict.items() if v > 0}

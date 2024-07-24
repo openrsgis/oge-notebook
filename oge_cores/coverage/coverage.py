@@ -2,6 +2,7 @@
 from oge_cores.common import metadata
 from oge_cores.coverage import oge_image
 from oge_cores.common import ogefiles
+from oge_cores.utils import coverage_utils
 
 
 class Coverage:
@@ -23,6 +24,10 @@ class Coverage:
         """
         self.__metadata: metadata.CoverageMetadata = coverage_metadata
 
+    @property
+    def metadata(self):
+        return self.__metadata
+
     # 这里实现Coverage获取metadata属性的方法
     @property
     def crs(self):
@@ -30,19 +35,9 @@ class Coverage:
         return self.__metadata.crs
 
     @property
-    def lat(self):
-        """获取图像经度"""
-        return self.__metadata.lat
-
-    @property
-    def lng(self):
-        """获取图像纬度"""
-        return self.__metadata.lng
-
-    @property
-    def extent(self):
+    def geo_transform(self):
         """获取图像范围"""
-        return self.__metadata.extent
+        return self.__metadata.geo_transform
 
     @property
     def bands(self):
@@ -54,9 +49,25 @@ class Coverage:
         """获取图像波段数"""
         return self.__metadata.bands_num
 
+    @property
+    def dtype(self):
+        return self.__metadata.dtype
+
+    @property
+    def cols(self):
+        return self.__metadata.cols
+
+    @property
+    def rows(self):
+        return self.__metadata.rows
+
+    @property
+    def file_path(self):
+        self.__image.get_coverage_file().get_file_path()
+
     def to_numpy_array(self):
         """将图像转为numpy array"""
-        self.__image.to_numpy_array()
+        return self.__image.to_numpy_array()
 
 
 def get_coverage_file_from_service(product_id: str, coverage_id: str) -> str:
@@ -79,6 +90,33 @@ def get_coverage(product_id: str, coverage_id: str) -> Coverage:
     file_path = get_coverage_file_from_service(product_id, coverage_id)
     file_metadata = metadata.get_coverage_metadata_from_service(product_id, coverage_id)
 
+    return Coverage(file_metadata, oge_image.Image(file_path))
+
+
+def get_coverage_from_file(path: str) -> Coverage:
+    """从文件构建Coverage对象"""
+    coverage_metadata = metadata.get_coverage_metadata_from_file(path)
+    image = oge_image.Image(coverage_file_path=path)
+
+    return Coverage(coverage_metadata, image)
+
+
+def numpy_array_metadata2coverage(numpy_array, coverage_metadata: metadata.CoverageMetadata):
+    """将numpy的array转为Coverage类"""
+    file_path = "./test1.tiff"
+    coverage_utils.write_img(
+        file_path, coverage_metadata.crs, coverage_metadata.geo_transform, numpy_array
+    )
+
+    return Coverage(coverage_metadata, oge_image.Image(coverage_file_path = file_path))
+
+
+def numpy_array2coverage(numpy_array, crs: str, geo_transform: tuple):
+    """将numpy的array转为Coverage类"""
+    file_path = "./test2.tiff"
+    coverage_utils.write_img(file_path, crs, geo_transform, numpy_array)
+
     return Coverage(
-        file_metadata, oge_image.Image(coverage_file=ogefiles.CoverageFile(file_path))
+        metadata.CoverageMetadata(crs=crs, geo_transform=geo_transform),
+        oge_image.Image(coverage_file_path = file_path),
     )
