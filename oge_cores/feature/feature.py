@@ -1,5 +1,4 @@
 # Feature类，包含属性信息和几何信息
-from osgeo import ogr
 from oge_cores.feature import oge_geometry
 from oge_cores.common import ogefiles
 
@@ -7,7 +6,7 @@ class Feature:
     """Feature类，包含几何信息和属性信息"""
 
     def __init__(self, feature_crs=4326, feature_attribute=None, feature_geometry=None) -> None:
-        self.__geometry: oge_geometry.Geometry = feature_geometry
+        self.__geometry: oge_geometry.OGeometry = feature_geometry
         self.__attribute: dict = feature_attribute
         self.__crs: int = feature_crs
     def set_geometry(self, feature_geometry: oge_geometry.OGeometry):
@@ -16,7 +15,7 @@ class Feature:
         Args:
             feature_geometry (oge_geometry.Geometry): 输入的几何
         """
-        self.__geometry: oge_geometry.Geometry = feature_geometry
+        self.__geometry: oge_geometry.OGeometry = feature_geometry
 
     def set_attribute(self, feature_attribute: dict):
         """设置feature的属性信息
@@ -42,14 +41,15 @@ class Feature:
         return self.__crs
     
     def to_geojson(self):
-        """转为np"""
+        """转为geojson"""
         pass
 
-    def to_wkt(self)
+    def to_wkt(self):
         """转为wkt"""
+        pass
         
 
-def get_feature_file_from_service(product_Id: str) -> str:
+def get_feature_file_from_service(product_id: str) -> str:
     """从Feature服务获取文件地址
 
     Args:
@@ -60,7 +60,7 @@ def get_feature_file_from_service(product_Id: str) -> str:
     """
     return ""
 
-def get_feature_attribute_from_service(product_Id: str) -> dict:
+def get_feature_attribute_from_service(product_id: str) -> dict:
     """从Feature服务获取属性信息
 
     Args:
@@ -71,8 +71,8 @@ def get_feature_attribute_from_service(product_Id: str) -> dict:
     """
     return {}
 
-def get_feature_crs_from_service(product_Id: str) -> int:
-    """从Feature服务获取属性信息
+def get_feature_crs_from_service(product_id: str) -> int:
+    """从Feature服务获取坐标系信息
 
     Args:
         product_Id (str): 产品名
@@ -80,9 +80,9 @@ def get_feature_crs_from_service(product_Id: str) -> int:
     Returns:
         产品属性信息
     """
-    return None
+    return int
 
-def get_feature(product_Id: str) -> Feature:
+def get_feature(product_id: str) -> Feature:
     """从Feature服务获取要素对象
 
     Args:
@@ -91,10 +91,10 @@ def get_feature(product_Id: str) -> Feature:
     Returns:
         产品属性信息
     """
-    file_path = get_feature_file_from_service(product_Id)
-    file_attribute = get_feature_attribute_from_service(product_Id)
-    file_crs = get_feature_crs_from_service(product_Id)
+    file_path = get_feature_file_from_service(product_id)
+    file_attribute = get_feature_attribute_from_service(product_id)
+    file_crs = get_feature_crs_from_service(product_id)
     
-    return Feature(file_crs, file_attribute, oge_geometry.OGeometry(feature_file=ogefiles.FeatureFile(file_path)))
-
-
+    return Feature(
+        file_crs, file_attribute, oge_geometry.OGeometry(feature_file=ogefiles.FeatureFile(file_path))
+    )

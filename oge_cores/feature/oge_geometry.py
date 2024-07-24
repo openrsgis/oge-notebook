@@ -1,7 +1,7 @@
 """OGeometry类，负责矢量的lazy加载"""
 
-from oge_cores.common import ogefiles
 from osgeo import ogr
+from oge_cores.common import ogefiles
 
 
 class OGeometry(ogr.Geometry):
@@ -30,7 +30,7 @@ class OGeometry(ogr.Geometry):
         return self.__type
     
     def check_geometry(self):
-        """检查图像是否存在，否则会下载图像。所有函数要先调用该函数进行检查。"""
+        """检查矢量是否存在，否则会下载矢量。所有函数要先调用该函数进行检查。"""
         if self.__feature_file is None:
             if self.__get_feature_function is not None:
                 # 下载图像到coverageFile
