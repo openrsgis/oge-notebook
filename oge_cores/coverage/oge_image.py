@@ -8,9 +8,11 @@ from osgeo import gdal
 class Image:
     """管理图像的File"""
 
-    def __init__(self, coverage_file_path: str = None, get_coverage_function=None):
+    def __init__(
+        self, coverage_file_path: str = None, get_coverage_function=None, del_able=False
+    ):
         self.__coverage_file: ogefiles.CoverageFile = ogefiles.CoverageFile(
-            coverage_file_path
+            coverage_file_path, del_able=del_able
         )
 
         # 图像加载回调函数，使用闭包或偏函数的方式传入，在使用文件时调用

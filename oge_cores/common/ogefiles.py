@@ -43,7 +43,9 @@ class FilePointerDict:
                 print(f"File {file_name} has been deleted.")
 
     def get_file_num(self) -> int:
-        keys_with_positive_values = {k for k, v in self.__file_path_dict.items() if v > 0}
+        keys_with_positive_values = {
+            k for k, v in self.__file_path_dict.items() if v > 0
+        }
         count = len(keys_with_positive_values)
         return count
 
@@ -52,10 +54,17 @@ file_pointer_dict = FilePointerDict()
 
 
 class InternalFile:
-    """内部文件类，所有文件类的基类"""
+    """内部文件类，所有文件类的基类.从文件构造的不可删除del_able = False，从临时文件构造的可删除del_able = True
 
-    def __init__(self, file_name: str) -> None:
+    Args:
+        self.__file_path(str): 文件指针,指向文件存储的位置
+        self.__del_able(bool): 文件是否可删除的标识符，为True会在引用终止时删除，为False不会删除。
+
+    """
+
+    def __init__(self, file_name: str, del_able=False) -> None:
         self.__file_path: str = file_name
+        self.__del_able: bool = del_able
         file_pointer_dict.add_file_reference(file_name)
 
     @abstractmethod
@@ -71,7 +80,8 @@ class InternalFile:
 
     # 析构函数，移除对该文件的引用
     def __del__(self):
-        file_pointer_dict.remove_file_reference(self.__file_path)
+        if self.__del_able:
+            file_pointer_dict.remove_file_reference(self.__file_path)
 
     def get_file_path(self) -> str:
         """获取文件路径

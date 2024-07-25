@@ -21,6 +21,7 @@ class CoverageMetadata(Metadata):
         Metadata (_type_): 基类
     """
 
+    # TODO: 需要构建图像数据格式到numpy array数据格式的映射关系
     def __init__(
         self,
         crs: str = None,

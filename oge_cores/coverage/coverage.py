@@ -2,7 +2,7 @@
 from oge_cores.common import metadata
 from oge_cores.coverage import oge_image
 from oge_cores.common import ogefiles
-from oge_cores.utils import coverage_utils
+from oge_cores.utils import coverage_utils, uuid4
 
 
 class Coverage:
@@ -66,8 +66,11 @@ class Coverage:
         self.__image.get_coverage_file().get_file_path()
 
     def to_numpy_array(self):
-        """将图像转为numpy array"""
-        return self.__image.to_numpy_array()
+        """将图像转为numpy array, (高度, 宽度, 通道数)"""
+        np_array = self.__image.to_numpy_array()
+        if len(np_array.shape) == 3:
+            np_array = np_array.transpose(1, 2, 0)
+        return np_array
 
 
 def get_coverage_file_from_service(product_id: str, coverage_id: str) -> str:
@@ -101,22 +104,37 @@ def get_coverage_from_file(path: str) -> Coverage:
     return Coverage(coverage_metadata, image)
 
 
-def numpy_array_metadata2coverage(numpy_array, coverage_metadata: metadata.CoverageMetadata):
-    """将numpy的array转为Coverage类"""
-    file_path = "./test1.tiff"
+def numpy_array_metadata2coverage(
+    numpy_array, coverage_metadata: metadata.CoverageMetadata
+):
+    """将numpy的array，和metadata一并转为Coverage类"""
+    file_path = f"./{uuid4.random_uuid()}.tiff"
     coverage_utils.write_img(
         file_path, coverage_metadata.crs, coverage_metadata.geo_transform, numpy_array
     )
 
-    return Coverage(coverage_metadata, oge_image.Image(coverage_file_path = file_path))
+    return Coverage(
+        coverage_metadata, oge_image.Image(coverage_file_path=file_path, del_able=True)
+    )
 
 
 def numpy_array2coverage(numpy_array, crs: str, geo_transform: tuple):
-    """将numpy的array转为Coverage类"""
-    file_path = "./test2.tiff"
+    """将numpy的array，和crs与geo_transform信息转为Coverage类"""
+    file_path = f"./{uuid4.random_uuid()}.tiff"
     coverage_utils.write_img(file_path, crs, geo_transform, numpy_array)
 
+    band_num = 1
+    if len(numpy_array.shape) == 3:
+        band_num = numpy_array.shape[2]
+
     return Coverage(
-        metadata.CoverageMetadata(crs=crs, geo_transform=geo_transform),
-        oge_image.Image(coverage_file_path = file_path),
+        metadata.CoverageMetadata(
+            crs=crs,
+            geo_transform=geo_transform,
+            bands=[str(i) for i in range(1, 1 + band_num)],
+            cols=numpy_array.shape[1],
+            rows=numpy_array.shape[0],
+            dtype=numpy_array.dtype,
+        ),
+        oge_image.Image(coverage_file_path=file_path, del_able=True),
     )
