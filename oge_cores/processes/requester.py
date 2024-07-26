@@ -2,6 +2,8 @@
 
 from typing import Dict
 from pywps import Service, ComplexInput, LiteralInput
+from oge_cores.processes import request_format
+from oge_cores.processes import process_utils
 
 
 class Requester:
@@ -10,13 +12,13 @@ class Requester:
     # TODO: 从模型服务中心获取现有模型及元信息
     def __init__(self) -> None:
         # 从模型到地址的映射关系
-        self.models_endpoint: Dict[str, str] = Dict()
+        self.models_endpoint: Dict[str, str] = {}
 
         # 从模型名称到输入的映射关系。第一位是进程id，后续是模型输入。输入输出最好都是动态地从数据库中获取。其次是从tomcat某个文件下获取。最后本地保存一份副本。
-        self.models_input: Dict[str, list] = Dict()
+        self.models_input: Dict[str, list] = {}
 
         # 从模型名称到输出数据结构的映射关系，一个模型可以有多个输出
-        self.models_output: Dict[str, list] = Dict()
+        self.models_output: Dict[str, list] = {}
         self.update_models()
         self.update_models_endpoint()
 
@@ -50,19 +52,32 @@ class Requester:
             # 其他输入...
         ]
         """
-        # 调用WPS服务,得到results
-        results = None
+
+        # 转换数据类型为输入的格式
+        input_args, input_kwargs = process_utils.inputs2request(
+            inputs_formats, args, kwargs
+        )
+        # TODO:调用WPS服务,得到results
+        results = []
 
         # results根据转为对应的返回值，返回给用户
         outputs_formats = self.get_models_outputs(process_name)
+        # outputs_formats = request_format.Requestformat("a",["Coverage"])
 
-        return []
+        output_res = process_utils.response2outputs(outputs_formats, results)
+        
+        if len(output_res) ==1:
+            return output_res[0]
+        else:
+            return output_res
 
-    def get_models_inputs(self, process_name) -> list:
-        return []
+    def get_models_inputs(self, process_name) -> request_format.Requestformat:
+        # TODO:修改获取模型方法
+        return request_format.Requestformat(process_name)
 
-    def get_models_outputs(self, process_name) -> list:
-        return []
+    def get_models_outputs(self, process_name) -> request_format.Requestformat:
+        # TODO:修改获取模型方法
+        return request_format.Requestformat(process_name)
 
     # 为空时返回None
     def get_models_endpoint(self, process_name) -> str:
