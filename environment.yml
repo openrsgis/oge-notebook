@@ -1,0 +1,12 @@
+# conda env create -f environment.yml
+name: oge
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip:
+    - -r requirements.txt
+  - geos
+  - proj
+  - gdal
