@@ -40,5 +40,36 @@ class OGeometry(ogr.Geometry):
                     f"发生了一个错误： {self.__feature_file} 不存在且无下载函数！"
                 )
 
+    def to_geometry(self):
+        # 指定Shapefile的路径
+        shp_path = self.__feature_file.get_file_path()
+        # shp_path = "path_to_your_shapefile.shp"
+
+        # 获取驱动器，这里是Shapefile的驱动器
+        driver = ogr.GetDriverByName("ESRI Shapefile")
+
+        # 打开数据源，也就是Shapefile文件
+        data_source = driver.Open(shp_path, 0)  # 参数0表示只读模式，1表示读写模式
+
+        if data_source is None:
+            print(f"Could not open file {shp_path}")
+        else:
+            # 获取数据源中的第一层，一般一个Shapefile只有一个层
+            layer = data_source.GetLayer()
+
+
+            # 遍历层中的所有特征
+            for feature in layer:
+                # 获取特征的属性
+                properties = feature.items()
+                print(properties)
+
+                # 获取特征的几何形状
+                geometry = feature.GetGeometryRef()
+                print(geometry)
+
+            # 关闭数据源
+            # data_source.Destroy()
+            return layer
 
 
