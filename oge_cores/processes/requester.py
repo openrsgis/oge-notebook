@@ -2,6 +2,8 @@
 
 from typing import Dict
 from pywps import Service, ComplexInput, LiteralInput
+from oge_cores.processes import request_format
+from oge_cores.processes import process_utils
 
 
 class Requester:
@@ -50,18 +52,24 @@ class Requester:
             # 其他输入...
         ]
         """
+
+        # 转换数据类型为输入的格式
+        input_args, input_wargs = process_utils.inputs2request(
+            inputs_formats, args, kwargs
+        )
         # 调用WPS服务,得到results
         results = None
 
         # results根据转为对应的返回值，返回给用户
         outputs_formats = self.get_models_outputs(process_name)
 
+        output_res = process_utils.response2outputs(outputs_formats, results)
+        return output_res
+
+    def get_models_inputs(self, process_name) -> request_format.Requestformat:
         return []
 
-    def get_models_inputs(self, process_name) -> list:
-        return []
-
-    def get_models_outputs(self, process_name) -> list:
+    def get_models_outputs(self, process_name) -> request_format.Requestformat:
         return []
 
     # 为空时返回None

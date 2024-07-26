@@ -63,7 +63,7 @@ class Coverage:
 
     @property
     def file_path(self):
-        self.__image.get_coverage_file().get_file_path()
+        return self.__image.get_coverage_file().get_file_path()
 
     def to_numpy_array(self):
         """将图像转为numpy array, (高度, 宽度, 通道数)"""
