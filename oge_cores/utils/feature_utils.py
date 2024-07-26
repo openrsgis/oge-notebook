@@ -22,6 +22,7 @@ def from_geometry(feature_crs, feature_attribute, geometry):
     # 创建新的图层，并复制给定的layer的几何类型和属性
     layer_dest = data_source.CreateLayer(layer.GetName(), srs=layer.GetSpatialRef(), geom_type=layer.GetGeomType())
 
+    layer_dest.CreateFeature()
     # 复制layer中的字段
     for field_def in layer.schema:
         field_def_copy = ogr.FieldDefn(field_def.GetName(), field_def.GetType())
@@ -43,5 +44,5 @@ def from_geometry(feature_crs, feature_attribute, geometry):
 
     oge_geometry_file = FeatureFile(shp_path)
     ogeometry = OGeometry(geometry_type='point', get_feature_function=None, feature_file=oge_geometry_file)
-    feature = Feature(feature_crs=4326, feature_attribute=None, feature_geometry=geometry)
+    feature = Feature(feature_crs=feature_crs, feature_attribute=feature_attribute, feature_geometry=ogeometry)
     return feature

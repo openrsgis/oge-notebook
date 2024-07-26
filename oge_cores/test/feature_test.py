@@ -7,6 +7,6 @@ def test_feature():
 
     geo = OGeometry('point', None, feature_file)
     geo_F = geo.to_geometry()
-    # ye = from_geometry(feature_crs=4326, feature_attribute=None, geometry=geo_F)
-    geo.AddPoint(1,2)
+    ye = from_geometry(feature_crs=4326, feature_attribute=None, geometry=geo_F)
+    # geo.AddPoint(1,2)
     print(geo)
