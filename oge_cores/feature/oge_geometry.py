@@ -2,7 +2,8 @@
 
 from osgeo import ogr
 from oge_cores.common import ogefiles
-
+from oge_cores.utils.geojson import GeoJson
+from oge_cores.utils.geojson import geojson_to_geometry
 
 class OGeometry(ogr.Geometry):
     """管理矢量的File"""
@@ -40,36 +41,29 @@ class OGeometry(ogr.Geometry):
                     f"发生了一个错误： {self.__feature_file} 不存在且无下载函数！"
                 )
 
-    def to_geometry(self):
+    def get_geometry(self):
+        """
+        加载OGeojson对象中的ogejson文件，读取数据并返回数据中的geometry部分
+        Returns: geometry data
+
+        """
         # 指定Shapefile的路径
-        shp_path = self.__feature_file.get_file_path()
+        if self.__feature_file is None:
+            print(f"OGeometry object has no feature_file")
+            return None
+        file_path = self.__feature_file.get_file_path()
         # shp_path = "path_to_your_shapefile.shp"
 
-        # 获取驱动器，这里是Shapefile的驱动器
-        driver = ogr.GetDriverByName("ESRI Shapefile")
+        data = GeoJson()
+        data.read(file_path)
 
-        # 打开数据源，也就是Shapefile文件
-        data_source = driver.Open(shp_path, 0)  # 参数0表示只读模式，1表示读写模式
-
-        if data_source is None:
-            print(f"Could not open file {shp_path}")
+        if not data.Base['features']:
+            print(f"Could not open file {file_path}")
         else:
             # 获取数据源中的第一层，一般一个Shapefile只有一个层
-            layer = data_source.GetLayer()
-
-
-            # 遍历层中的所有特征
-            for feature in layer:
-                # 获取特征的属性
-                properties = feature.items()
-                print(properties)
-
-                # 获取特征的几何形状
-                geometry = feature.GetGeometryRef()
-                print(geometry)
-
-            # 关闭数据源
-            # data_source.Destroy()
-            return layer
+            features = data.Base["features"]
+            for feature in features:
+                geometry = feature["geometry"]
+            return geojson_to_geometry(geometry)
 
 
