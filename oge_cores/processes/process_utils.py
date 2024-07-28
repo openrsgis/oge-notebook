@@ -3,15 +3,16 @@ from oge_cores.coverage import Coverage, get_coverage_from_file
 
 
 def parse_input_args(arg_type: str, arg):
-    if arg_type == "Coverage":
+    arg_type = arg_type.lower()
+    if arg_type == "coverage":
         if isinstance(arg, Coverage) is not True:
             raise TypeError(f"{arg} is {type(arg)}, not Coverage!")
         return arg.file_path
 
-    if arg_type == "Feature":
+    if arg_type == "feature":
         pass
 
-    if arg_type == "String":
+    if arg_type == "string":
         return str(arg)
 
     if arg_type == "int":
@@ -22,10 +23,11 @@ def parse_input_args(arg_type: str, arg):
 
 
 def parse_output_args(arg_type: str, arg):
-    if arg_type == "Coverage":
+    arg_type = arg_type.lower()
+    if arg_type == "coverage":
         return get_coverage_from_file(arg)
 
-    if arg_type == "Feature":
+    if arg_type == "feature":
         pass
 
 
@@ -60,17 +62,19 @@ def inputs2request(input_formats: request_format.Requestformat, *args, **kwargs)
         if len(res_kwargs) < len(format_must_list):
             raise ValueError(f"输入参数数小于必须输入的参数数！请检查输入参数！")
         for key, value in input_formats.format_optional_dict.items():
-            res_kwargs[key] = parse_input_args(value, kwargs[key])
+            if key in kwargs:
+                res_kwargs[key] = parse_input_args(value, kwargs[key])
+
     elif len(args) > len(format_must_list):
         format_optional_list = list(input_formats.format_optional_dict.items())
         for i in range(len(format_must_list)):
             key, value = format_must_list[i]
             res_kwargs[key] = parse_input_args(value, args[i])
         for i in range(
-            len(format_must_list), len(format_must_list) + len(format_optional_list)
+            len(format_optional_list)
         ):
             key, value = format_optional_list[i]
-            res_kwargs[key] = parse_input_args(value, args[i])
+            res_kwargs[key] = parse_input_args(value, args[i + len(format_must_list)])
 
         for key, value in kwargs.items():
             res_kwargs[key] = parse_input_args(
