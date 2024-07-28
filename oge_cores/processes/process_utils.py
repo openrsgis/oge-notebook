@@ -1,5 +1,6 @@
 from oge_cores.processes import request_format
 from oge_cores.coverage import Coverage, get_coverage_from_file
+from oge_cores.feature.feature import Feature
 
 
 def parse_input_args(arg_type: str, arg):
@@ -9,7 +10,10 @@ def parse_input_args(arg_type: str, arg):
         return arg.file_path
 
     if arg_type == "Feature":
-        pass
+        if isinstance(arg, Feature) is not True:
+            raise TypeError(f"{arg} is {type(arg)}, not Feature!")
+        return arg.file_path
+
 
     if arg_type == "String":
         return str(arg)
@@ -26,7 +30,6 @@ def parse_output_args(arg_type: str, arg):
         return get_coverage_from_file(arg)
 
     if arg_type == "Feature":
-        pass
 
 
 def inputs2request(input_formats: request_format.Requestformat, *args, **kwargs):
