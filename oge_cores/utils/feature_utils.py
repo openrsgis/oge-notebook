@@ -4,45 +4,55 @@ from osgeo import ogr
 from oge_cores.feature.feature import Feature
 from oge_cores.common import ogefiles
 from oge_cores.feature.oge_geometry import OGeometry
+from oge_cores.utils.geojson import GeoJson, geometry_to_geojson, geojson_to_geometry
+from osgeo.ogr import Geometry
+import json
 
-def from_geometry(feature_crs, feature_attribute, geometry):
-    layer = geometry
-    # 指定Shapefile的路径
-    shp_path = "D:\JAVAprogram\oge-notebook\path_to_your_shapefile.shp"
-    # 获取Shapefile的驱动器
-    driver = ogr.GetDriverByName("ESRI Shapefile")
 
-    # 创建新的数据源，即Shapefile文件
-    data_source = driver.CreateDataSource(shp_path)
+def from_geometry(feature_crs=None, feature_attribute=None, geometry: Geometry = None) -> Feature:
+    """
+    将Geometry对象转为Feature对象, 同时将Feature对象以geojson格式保存到指定路径下
 
-    # 定义图层的几何类型，例如点(wkbPoint)
-    layer_name = "NewLayer"
-    layer_geom_type = ogr.wkbPoint
+    Args:
+        feature_crs:
+        feature_attribute:
+        ogeometry:
 
-    # 创建新的图层，并复制给定的layer的几何类型和属性
-    layer_dest = data_source.CreateLayer(layer.GetName(), srs=layer.GetSpatialRef(), geom_type=layer.GetGeomType())
+    Returns:
+        Feature
+    """
+    # 指定保存feature对象的路径
+    path = "D:/JAVAprogram/oge-notebook/test.geojson"
+    # 将Geometry对象以geojson格式保存到指定路径下
+    geojson = geometry_to_geojson(geometry)
 
-    layer_dest.CreateFeature()
-    # 复制layer中的字段
-    for field_def in layer.schema:
-        field_def_copy = ogr.FieldDefn(field_def.GetName(), field_def.GetType())
-        layer_dest.CreateField(field_def_copy)
+    with open('polygon.geojson', 'w', encoding='utf-8') as f:
+        json.dump(geojson, f, indent=4)
 
-    # 复制layer中的要素
-    layer_def = layer.GetLayerDefn()
-    for feature in layer:
-        feature_copy = ogr.Feature(layer_def)
-        feature_copy.SetFrom(feature)
-        layer_dest.CreateFeature(feature_copy)
-        feature_copy.Destroy()
-
-    # 保存数据源的更改
-    data_source.FlushCache()
-
-    # 关闭数据源
-    data_source.Destroy()
-
-    oge_geometry_file = FeatureFile(shp_path)
-    ogeometry = OGeometry(geometry_type='point', get_feature_function=None, feature_file=oge_geometry_file)
+    # 读取geojson文件，将Geometry对象转为Feature对象
+    oge_geometry_file = FeatureFile(path)
+    ogeometry = OGeometry(geometry_type=geometry.type, get_feature_function=None, feature_file=oge_geometry_file)
     feature = Feature(feature_crs=feature_crs, feature_attribute=feature_attribute, feature_geometry=ogeometry)
+
     return feature
+
+
+def to_geometry(feature: Feature):
+    """
+    加载Feature对象的file路径内的Geometry数据，将Feature对象转为Geometry对象，返回Geometry数据
+
+    Args:
+        feature:
+
+    Returns:
+        OGeometry
+    """
+    if feature.geometry is None:
+        return None
+    # 加载Feature对象包含的OGeometry对象
+    ogeometry = feature.geometry
+
+    # 读取OGeometry对象file_path属性包含的Geometry数据
+    geometry = ogeometry.get_geometry()
+
+    return geometry
