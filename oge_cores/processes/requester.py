@@ -2,6 +2,9 @@
 
 from typing import Dict
 from pywps import Service, ComplexInput, LiteralInput
+import requests
+import json
+
 from oge_cores.processes import request_format
 from oge_cores.processes import process_utils
 
@@ -46,27 +49,18 @@ class Requester:
 
         inputs_formats = self.get_models_inputs(process_name)
 
-        """ TODO:将 *args根据inputs_formats整理为对应的格式。形如：
-        inputs = [
-            LiteralInput('input_id', 'input_value', 'input description'),
-            # 其他输入...
-        ]
-        """
-
         # 转换数据类型为输入的格式
-        input_args, input_kwargs = process_utils.inputs2request(
-            inputs_formats, args, kwargs
-        )
+        input = process_utils.inputs2request(inputs_formats, args, kwargs)
         # TODO:调用WPS服务,得到results
-        results = []
+        results = self.post(endpoint, input)
 
         # results根据转为对应的返回值，返回给用户
         outputs_formats = self.get_models_outputs(process_name)
         # outputs_formats = request_format.Requestformat("a",["Coverage"])
 
         output_res = process_utils.response2outputs(outputs_formats, results)
-        
-        if len(output_res) ==1:
+
+        if len(output_res) == 1:
             return output_res[0]
         else:
             return output_res
@@ -82,6 +76,21 @@ class Requester:
     # 为空时返回None
     def get_models_endpoint(self, process_name) -> str:
         return ""
+
+    def post(self, endpoint, data) -> list:
+        """发送post请求
+
+        Args:
+        endpoint: 服务地址
+        data(dict): 请求参数
+        """
+        response = requests.post(
+            endpoint,
+            data=data,
+            headers={"Content-Type": "application/json"},
+            timeout=60,
+        )
+        return json.loads(response.text)[0]["data"]
 
 
 # 单例对象
