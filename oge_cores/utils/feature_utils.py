@@ -24,14 +24,12 @@ def from_geometry(feature_crs=None, feature_attribute=None, geometry: Geometry =
     # 指定保存feature对象的路径
     path = "D:/JAVAprogram/oge-notebook/test.geojson"
     # 将Geometry对象以geojson格式保存到指定路径下
-    geojson = geometry_to_geojson(geometry)
-
-    with open('polygon.geojson', 'w', encoding='utf-8') as f:
-        json.dump(geojson, f, indent=4)
+    geojson = geometry_to_geojson(geometry, feature_attribute=feature_attribute)
+    geojson.save(path)
 
     # 读取geojson文件，将Geometry对象转为Feature对象
     oge_geometry_file = FeatureFile(path)
-    ogeometry = OGeometry(geometry_type=geometry.type, get_feature_function=None, feature_file=oge_geometry_file)
+    ogeometry = OGeometry(geometry_type=geojson.Base['features'][0]['geometry']['type'], get_feature_function=None, feature_file=oge_geometry_file)
     feature = Feature(feature_crs=feature_crs, feature_attribute=feature_attribute, feature_geometry=ogeometry)
 
     return feature
@@ -54,5 +52,6 @@ def to_geometry(feature: Feature):
 
     # 读取OGeometry对象file_path属性包含的Geometry数据
     geometry = ogeometry.get_geometry()
+    # print(geometry)
 
     return geometry

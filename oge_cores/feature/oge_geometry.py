@@ -47,23 +47,23 @@ class OGeometry(ogr.Geometry):
         Returns: geometry data
 
         """
-        # 指定Shapefile的路径
+        # 获取数据保存的路径
         if self.__feature_file is None:
             print(f"OGeometry object has no feature_file")
             return None
         file_path = self.__feature_file.get_file_path()
-        # shp_path = "path_to_your_shapefile.shp"
 
+        # 读取数据
         data = GeoJson()
         data.read(file_path)
 
         if not data.Base['features']:
             print(f"Could not open file {file_path}")
         else:
-            # 获取数据源中的第一层，一般一个Shapefile只有一个层
+            # 获取数据源中的第一个几何对象，一般一个数据源只有一个几何对象
+            # 这里写的循环是为了日后方便修改
             features = data.Base["features"]
-            for feature in features:
-                geometry = feature["geometry"]
+            # for feature in features:
+            #     geometry = feature
+            geometry = features[0]
             return geojson_to_geometry(geometry)
-
-
