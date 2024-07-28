@@ -101,7 +101,11 @@ def test_feature_to_geometry():
 
 
 if __name__ == "__main__":
+    test_polygon_geometry_to_feature()
     test_feature_to_geometry()
-    # test_polygon_geometry_to_feature()
-    # test_point_geometry_to_feature()
-    # test_line_geometry_to_feature()
+
+    test_point_geometry_to_feature()
+    test_feature_to_geometry()
+
+    test_line_geometry_to_feature()
+    test_feature_to_geometry()

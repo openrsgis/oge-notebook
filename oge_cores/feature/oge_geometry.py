@@ -9,13 +9,13 @@ class OGeometry(ogr.Geometry):
     """管理矢量的File"""
 
     def __init__(self, geometry_type: str=None, get_feature_function=None, feature_file: ogefiles.FeatureFile = None):
-        valid_options = ['point', 'line', 'polygon']
+        valid_options = ['point', 'linestring', 'polygon']
         if geometry_type not in valid_options:
-            raise ValueError("Invalid geometry_type. Must be one of: 'point', 'line', or 'polygon'.")
+            raise ValueError("Invalid geometry_type. Must be one of: 'point', 'linestring', or 'polygon'.")
 
         if geometry_type == 'point':
             super().__init__(ogr.wkbPoint)
-        elif geometry_type == 'line':
+        elif geometry_type == 'linestring':
             super().__init__(ogr.wkbLineString)
         elif geometry_type == 'polygon':
             super().__init__(ogr.wkbPolygon)

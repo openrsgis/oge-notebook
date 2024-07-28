@@ -82,7 +82,7 @@ from osgeo import osr
 ogr_dir = {
     'UNKNOWN': "unknown",
     "POINT": "point",
-    "LINESTRING": "line",
+    "LINESTRING": "linestring",
     "POLYGON": "polygon",
     4: "multiPoint",
     5: "multiLineString",
@@ -142,7 +142,7 @@ def geometry_to_geojson(geometry, feature_attribute=None):
     # 根据几何类型填充坐标
     if geojson["geometry"]["type"] in ['point']:
         geojson["geometry"]["coordinates"] = point_2_geojson(geometry)
-    elif geojson["geometry"]["type"] in ["line"]:
+    elif geojson["geometry"]["type"] in ["linestring"]:
         geojson["geometry"]["coordinates"] = line_2_geojson(geometry)
     elif geojson["geometry"]["type"] in ["polygon"]:
         geojson["geometry"]["coordinates"] = polygon_2_geojson(geometry)
@@ -194,12 +194,12 @@ def geojson_to_geometry(geojson, feature_crs=4326):
     # 创建Polygon几何对象,根据几何类型填充坐标
     if geotype in ['point']:
         geometry = geojson_2_point(geojson["geometry"]["coordinates"])
-    elif geotype in ["line"]:
+    elif geotype in ["linestring"]:
         geometry = geojson_2_line(geojson["geometry"]["coordinates"])
     elif geotype in ["polygon"]:
         geometry = geojson_2_polygon(geojson["geometry"]["coordinates"])
     else:
-        raise ValueError("Invalid geometry_type. Must be one of: 'point', 'line', or 'polygon'.")
+        raise ValueError("Invalid geometry_type. Must be one of: 'point', 'linestring', or 'polygon'.")
 
     # 将坐标系赋给几何对象
     geometry.AssignSpatialReference(spatial_ref)
@@ -369,7 +369,7 @@ def check_type(type, coordinates):
     if list_num == 0:
         flag = (type == 'point')
     elif list_num == 2:
-        flag = (type == 'line')
+        flag = (type == 'linestring')
     elif list_num > 3:
         flag = (type == 'polygon')
     if not flag:
