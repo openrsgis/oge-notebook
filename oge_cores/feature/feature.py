@@ -1,6 +1,8 @@
 # Feature类，包含属性信息和几何信息
 from oge_cores.feature import oge_geometry
 from oge_cores.common import ogefiles
+from oge_cores.feature.oge_geometry import OGeometry
+from oge_cores.utils.geojson import *
 
 class Feature:
     """Feature类，包含几何信息和属性信息"""
@@ -98,3 +100,26 @@ def get_feature(product_id: str) -> Feature:
     return Feature(
         file_crs, file_attribute, oge_geometry.OGeometry(feature_file=ogefiles.FeatureFile(file_path))
     )
+
+
+def get_feature_from_file(path: str) -> Feature:
+    """从地址中读取数据，转为feature对象"""
+    # 读取数据
+    data = GeoJson()
+    data.read(path)
+
+    if not data.Base['features']:
+        print(f"Could not open file {path}")
+    else:
+        # 获取数据源中的第一个几何对象，一般一个数据源只有一个几何对象
+        # 这里写的循环是为了日后方便修改
+        features = data.Base["features"]
+        # for feature in features:
+        #     geometry = feature
+        geometry = features[0]
+
+        feature_file = ogefiles.FeatureFile(path)
+
+        ogemetry = OGeometry(geometry_type=geometry['geometry']['type'], get_feature_function=None, feature_file=feature_file)
+
+        return Feature(feature_crs=4326, feature_attribute=geometry['properties'], feature_geometry=ogemetry)

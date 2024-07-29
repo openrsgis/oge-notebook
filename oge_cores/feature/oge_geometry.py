@@ -2,24 +2,26 @@
 
 from osgeo import ogr
 from oge_cores.common import ogefiles
-from oge_cores.utils.geojson import GeoJson
+from oge_cores.utils.geojson import GeoJson, ogr_dir
 from oge_cores.utils.geojson import geojson_to_geometry
+
 
 class OGeometry(ogr.Geometry):
     """管理矢量的File"""
 
-    def __init__(self, geometry_type: str=None, get_feature_function=None, feature_file: ogefiles.FeatureFile = None):
-        valid_options = ['point', 'linestring', 'polygon']
+    def __init__(self, geometry_type: str = None, get_feature_function=None, feature_file: ogefiles.FeatureFile = None):
+        valid_options = [ogr_dir['POINT'], ogr_dir['LINESTRING'], ogr_dir['POLYGON']]
         if geometry_type not in valid_options:
-            raise ValueError("Invalid geometry_type. Must be one of: 'point', 'linestring', or 'polygon'.")
+            raise ValueError(
+                f"Invalid geometry_type. Must be one of: {ogr_dir['POINT']}, {ogr_dir['LINESTRING']}, {ogr_dir['POLYGON']}.")
 
-        if geometry_type == 'point':
+        if geometry_type == ogr_dir['POINT']:
             super().__init__(ogr.wkbPoint)
-        elif geometry_type == 'linestring':
+        elif geometry_type == ogr_dir['LINESTRING']:
             super().__init__(ogr.wkbLineString)
-        elif geometry_type == 'polygon':
+        elif geometry_type == ogr_dir['POLYGON']:
             super().__init__(ogr.wkbPolygon)
-        
+
         self.__type = geometry_type
         # 矢量加载回调函数，使用闭包或偏函数的方式传入，在使用文件时调用
         self.__get_feature_function = get_feature_function
@@ -29,7 +31,7 @@ class OGeometry(ogr.Geometry):
     def type(self):
         """获取矢量类型信息"""
         return self.__type
-    
+
     def check_geometry(self):
         """检查矢量是否存在，否则会下载矢量。所有函数要先调用该函数进行检查。"""
         if self.__feature_file is None:

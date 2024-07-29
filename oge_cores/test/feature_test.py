@@ -93,7 +93,7 @@ def test_line_geometry_to_feature():
 def test_feature_to_geometry():
     """ogemetry是用户直接使用的，其他的对象都是系统内部隐式完成的"""
     feature_file = FeatureFile("D:/JAVAprogram/oge-notebook/test.geojson")
-    geo = OGeometry('polygon', None, feature_file)
+    geo = OGeometry('Point', None, feature_file)
     fet = Feature(feature_crs=4326, feature_attribute=None, feature_geometry=geo)
 
     geo_F = feature_utils.to_geometry(fet)
