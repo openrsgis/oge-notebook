@@ -1,0 +1,24 @@
+{
+    "identifier": "name1",
+    "request_from": "id",
+    "work_dir": "path",
+    "inputs": [
+        {
+            "MUX": "/mnt/storage/SAGA/sagaData/Landsat_dl.tif"
+        },
+        {
+            "PAN": "/mnt/storage/SAGA/sagaData/sentinel2_B3_dl.tif"
+        },
+        {
+            "BANDS": [
+                2,
+                3,
+                4
+            ]
+        },
+        {
+            "METHOD": "PCA"
+        }
+    ],
+    "mode": "sync"
+}
