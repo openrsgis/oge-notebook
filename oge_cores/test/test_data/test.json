@@ -1,0 +1,20 @@
+{
+    "job-id": "2284cb713fed4f789946d529ad0e6ffa",
+    "name": "Process",
+    "result": [
+        {
+            "name": "params",
+            "type": "string",
+            "value": "value1"
+        },
+        {
+            "name": "params2",
+            "type": "coverage",
+            "value": "value2"
+        }
+    ],
+    "status": "SUCCESS"
+}
+
+
+

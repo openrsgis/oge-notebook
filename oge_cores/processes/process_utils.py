@@ -30,12 +30,24 @@ def parse_output_args(arg_type: str, arg):
     if arg_type == "feature":
         pass
 
+    if arg_type == "geometry":
+        pass
+
+    if arg_type == "string":
+        return arg
+    
+    if arg_type == "int":
+        return int(arg)
+    
+    if arg_type == "float":
+        return float(arg)
+
 
 # TODO:这个解析要做优化，要能处理以args输入和kwargs格式输入的情况
 def inputs2request(input_formats: request_format.Requestformat, *args, **kwargs):
     """输入的参数解包为请求的输入格式"""
 
-    res_kwargs = {}
+    res_kwargs = {} # key:名称，value:值
 
     # 输入key检查
     for key, value in kwargs.items():
@@ -43,13 +55,14 @@ def inputs2request(input_formats: request_format.Requestformat, *args, **kwargs)
             key not in input_formats.format_must_dict
             and key not in input_formats.format_optional_dict
         ):
-            raise f"输入参数{key}不在该输入函数的参数列表中！请检查输入参数。"
+            raise RuntimeError( f"输入参数{key}不在该输入函数的参数列表中！请检查输入参数。")
     if len(args) + len(kwargs) > len(input_formats.format_must_dict) + len(
         input_formats.format_optional_dict
     ):
-        raise f"输入参数数量 {len(args) + len(kwargs)} 超过了应该输入的参数数量 {len(input_formats.format_must_dict) + len(input_formats.format_optional_dict)}！"
+        raise RuntimeError(f"输入参数数量 {len(args) + len(kwargs)} 超过了应该输入的参数数量 {len(input_formats.format_must_dict) + len(input_formats.format_optional_dict)}！")
 
     format_must_list = list(input_formats.format_must_dict.items())
+    # 分两种情况考虑
     if len(args) <= len(format_must_list):
         for i in range(len(args)):
             key, value = format_must_list[i]
@@ -70,9 +83,7 @@ def inputs2request(input_formats: request_format.Requestformat, *args, **kwargs)
         for i in range(len(format_must_list)):
             key, value = format_must_list[i]
             res_kwargs[key] = parse_input_args(value, args[i])
-        for i in range(
-            len(format_optional_list)
-        ):
+        for i in range(len(format_optional_list)):
             key, value = format_optional_list[i]
             res_kwargs[key] = parse_input_args(value, args[i + len(format_must_list)])
 
@@ -84,7 +95,24 @@ def inputs2request(input_formats: request_format.Requestformat, *args, **kwargs)
     return res_kwargs
 
 
-def response2outputs(
+def response2outputs(output_dict: dict) -> dict:
+    result_list = []
+    status = output_dict["status"]
+    if status == "ERROR":
+        raise RuntimeError(
+            f"{output_dict['name']} 执行中出现错误！错误信息：{output_dict['message']}"
+        )
+    elif status == "FAILED":
+        raise RuntimeError(f"{output_dict['name']} 执行中出现错误！请联系管理员解决。")
+    elif status == "SUCCESS":
+        output_list = output_dict["result"]
+        for item in output_list:
+            result_list.append(parse_output_args(item["type"], item["value"]))
+
+    return result_list
+
+
+def response_output_formats2outputs(
     output_formats: request_format.Requestformat, res_dict: dict
 ) -> list:
     """返回的结果，解包为对应的数据格式返回"""
