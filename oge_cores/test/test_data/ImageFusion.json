@@ -1,0 +1,77 @@
+{
+  "identifier": "ImageFusion",
+  "title": "Image Fusion Process",
+  "abstract": "Executes IHS fusion algorithm using specified input files and bands",
+  "version": "1.0.0",
+  "use_docker": true,
+  "inputs": [
+    {
+      "identifier": "MUX",
+      "title": "MUX File Path",
+      "data_type": "string",
+      "file_path": true,
+      "formats": "tif",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "PAN",
+      "title": "PAN File Path",
+      "data_type": "string",
+      "file_path": true,
+      "formats": "tif",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "BANDS",
+      "title": "Bands for Fusion",
+      "data_type": "string",
+      "file_path": false,
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "METHOD",
+      "title": "Method for Image Fusion",
+      "data_type": "string",
+      "file_path": false,
+      "optional": true,
+      "default": "test"
+    }
+  ],
+  "outputs": [
+    {
+      "identifier": "OUTPUT",
+      "title": "Output File Path",
+      "data_type": "string",
+      "file_path": true,
+      "formats": "tif"
+    }
+  ],
+  "execution": [
+    {
+      "script": "python ImageFusion.py",
+      "working_directory": "/mnt/storage/pythonAlgorithm/",
+      "type": "docker",
+      "parameters": [
+        "--mux",
+        "MUX",
+        "--pan",
+        "PAN",
+        "--bands",
+        "BANDS",
+        "--method",
+        "METHOD",
+        "--output",
+        "OUTPUT"
+      ]
+    }
+  ],
+  "paths": {
+    "host_input_path": "/mnt/storage/pywps/inputs",
+    "host_output_path": "/mnt/storage/pywps/outputs",
+    "container_external_path": "/mnt/storage/SAGA/sagaData",
+    "container_internal_path": "/tmp/saga"
+  }
+}
