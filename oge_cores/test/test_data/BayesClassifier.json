@@ -1,0 +1,120 @@
+{
+  "identifier": "BayesClassifier",
+  "title": "Bayes Process",
+  "abstract": "Executes OpenCV based image processing using SAGA GIS",
+  "version": "1.0.0",
+  "use_docker": true,
+  "inputs": [
+    {
+      "identifier": "FEATURES",
+      "title": "Features File Path",
+      "data_type": "coverage",
+      "formats": "tif",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "NORMALIZE",
+      "title": "Normalize",
+      "data_type": "boolean",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "MODEL_TRAIN",
+      "title": "Model Train",
+      "data_type": "int",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "TRAIN_CLASS",
+      "title": "Training Class",
+      "data_type": "string",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "TRAIN_BUFFER",
+      "title": "Training Buffer",
+      "data_type": "float",
+      "optional": false,
+      "default": null
+    }
+  ],
+  "outputs": [
+    {
+      "identifier": "CLASSES",
+      "title": "Classes Output File",
+      "data_type": "file",
+      "formats": "sdat",
+      "next_step_input": true,
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "CLASSES_LUT",
+      "title": "Classes LUT Output File",
+      "data_type": "table",
+      "formats": "dbf",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "OUTPUT_TIF",
+      "title": "Output TIF File Path",
+      "data_type": "coverage",
+      "formats": "tif",
+      "optional": false,
+      "default": null
+    }
+  ],
+  "execution": [
+    {
+      "script": "docker exec strange_pare saga_cmd imagery_opencv 5",
+      "working_directory": "/mnt/storage/pythonAlgorithm",
+      "type": "docker",
+      "ignore_errors": true,
+      "parameters": [
+        "-FEATURES",
+        "FEATURES",
+        "-NORMALIZE",
+        "NORMALIZE",
+        "-MODEL_TRAIN",
+        "MODEL_TRAIN",
+        "-TRAIN_SAMPLES",
+        "TRAIN_SAMPLES",
+        "-TRAIN_AREAS",
+        "TRAIN_AREAS",
+        "-TRAIN_CLASS",
+        "TRAIN_CLASS",
+        "-TRAIN_BUFFER",
+        "TRAIN_BUFFER",
+        "-MODEL_LOAD",
+        "MODEL_LOAD",
+        "-MODEL_SAVE",
+        "MODEL_SAVE",
+        "-CLASSES",
+        "CLASSES",
+        "-CLASSES_LUT",
+        "CLASSES_LUT"
+      ]
+    },
+    {
+      "script": "conda run -n cv python sdattotif.py",
+      "working_directory": "/root/svm/",
+      "parameters": [
+        "--imagePath",
+        "CLASSES",
+        "--outputPath",
+        "OUTPUT_TIF"
+      ]
+    }
+  ],
+  "paths": {
+    "host_input_path": "/mnt/storage/pywps/inputs",
+    "host_output_path": "/mnt/storage/pywps/outputs",
+    "container_external_path": "/mnt/storage/SAGA/sagaData",
+    "container_internal_path": "/tmp/saga"
+  }
+}

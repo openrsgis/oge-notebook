@@ -1,24 +1,13 @@
 {
-    "identifier": "name1",
-    "request_from": "id",
-    "work_dir": "path",
-    "inputs": [
-        {
-            "MUX": "/mnt/storage/SAGA/sagaData/Landsat_dl.tif"
-        },
-        {
-            "PAN": "/mnt/storage/SAGA/sagaData/sentinel2_B3_dl.tif"
-        },
-        {
-            "BANDS": [
-                2,
-                3,
-                4
-            ]
-        },
-        {
-            "METHOD": "PCA"
-        }
-    ],
-    "mode": "sync"
+    "identifier": "ISODATAClustering",
+    "mode": "async",
+    "inputs": {
+        "FEATURES": "Sentinel_B3_wh.tif",
+        "NORMALIZE": 0,
+        "ITERATIONS": 20,
+        "CLUSTER_INI": 5,
+        "CLUSTER_MAX": 6,
+        "SAMPLES_MIN": 5,
+        "INITIALIZE": 0
+    }
 }

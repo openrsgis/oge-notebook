@@ -1,0 +1,26 @@
+{
+    "completionTime": "2024-07-31T09:00:53.002Z",
+    "expirationTime": "2024-08-01T09:00:53.002Z",
+    "identifier": "BayesClassifier",
+    "jobId": "1ad1889a48334ce8881ead2ea5fc27f9",
+    "message": "PyWPS Process Bayes Process finished",
+    "result": [
+        {
+            "data_type": "file",
+            "name": "CLASSES",
+            "value": "/outputs/BayesClassifier-CLASSES-b160882aabb14124ac6e0eb5796baa0c.sdat"
+        },
+        {
+            "data_type": "table",
+            "name": "CLASSES_LUT",
+            "value": "/outputs/BayesClassifier-CLASSES_LUT-3f5ef69bb5eb49429672a1799e990297.dbf"
+        },
+        {
+            "data_type": "coverage",
+            "name": "OUTPUT_TIF",
+            "value": "/outputs/BayesClassifier-OUTPUT_TIF-8162302e41194937800510e5b4917d45.tif"
+        }
+    ],
+    "status": "SUCCESS",
+    "timestamp": 1722387653.0175455
+}

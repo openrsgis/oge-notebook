@@ -1,0 +1,21 @@
+{
+    "completionTime": "2024-07-30T15:19:23.786Z",
+    "expirationTime": "2024-07-31T15:19:23.786Z",
+    "identifier": "ISODATAClustering",
+    "jobId": "f2c58fbf5b4640148ec49caaaa34a24c",
+    "message": "PyWPS Process ISODATA Clustering Process finished",
+    "result": [
+        {
+            "name": "CLUSTER",
+            "type": "string",
+            "value": "/outputs/ISODATAClustering-CLUSTER-1709b8a56b1745a4bb9bf0212c71b6d1.tif"
+        },
+        {
+            "name": "STATISTICS",
+            "type": "string",
+            "value": "/outputs/ISODATAClustering-STATISTICS-3f2482e890ed40b089afed1ea400ef85.dbf"
+        }
+    ],
+    "status": "SUCCESS",
+    "timestamp": 1722323963.80227
+}

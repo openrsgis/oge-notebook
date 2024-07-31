@@ -1,0 +1,16 @@
+{
+    "identifier": "BayesClassifier",
+    "mode": "sync",
+    "inputs": {
+        "FEATURES": "Landsat_wh_s.tif",
+        "NORMALIZE": true,
+        "MODEL_TRAIN": 0,
+        "TRAIN_SAMPLES": "area_wh.shp",
+        "TRAIN_AREAS": "sample_wh.shp",
+        "TRAIN_CLASS": "name",
+        "TRAIN_BUFFER": 1.0,
+        "MODEL_LOAD": "1.txt",
+        "MODEL_SAVE": "11.txt"
+    },
+    "host_output_path": "/mnt/storage/pywps/outputs"
+}
