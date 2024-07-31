@@ -9,7 +9,7 @@ from osgeo import osr
 
 def test_polygon_geometry_to_feature():
     """geometry是用户直接使用的，其他的对象都是系统内部隐式完成的"""
-    # feature_file = FeatureFile("D:/JAVAprogram/oge-notebook/vector_1700818309513.geojson")
+    # feature_file = FeatureFile("oge_cores/test/test_data/testVector.geojson")
     # geo = OGeometry('point', None, feature_file)
     # 创建坐标系对象
     spatial_ref = osr.SpatialReference()
@@ -43,7 +43,7 @@ def test_polygon_geometry_to_feature():
 
 def test_point_geometry_to_feature():
     """geometry是用户直接使用的，其他的对象都是系统内部隐式完成的"""
-    # feature_file = FeatureFile("D:/JAVAprogram/oge-notebook/vector_1700818309513.geojson")
+    # feature_file = FeatureFile("oge_cores/test/test_data/testVector.geojson")
     # geo = OGeometry('point', None, feature_file)
     # 创建坐标系对象
     spatial_ref = osr.SpatialReference()
@@ -92,7 +92,7 @@ def test_line_geometry_to_feature():
 
 def test_feature_to_geometry():
     """ogemetry是用户直接使用的，其他的对象都是系统内部隐式完成的"""
-    feature_file = FeatureFile("D:/JAVAprogram/oge-notebook/test.geojson")
+    feature_file = FeatureFile("oge_cores/test/test_data/testVector.geojson")
     geo = OGeometry('Point', None, feature_file)
     fet = Feature(feature_crs=4326, feature_attribute=None, feature_geometry=geo)
 

@@ -1,0 +1,42 @@
+{
+    "spatialReference": "4326",
+    "features": [
+        {
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            10.0,
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            10.0,
+                            10.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            10.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    ]
+                ]
+            },
+            "properties": [],
+            "type": "Feature"
+        }
+    ],
+    "type": "FeatureCollection"
+}
