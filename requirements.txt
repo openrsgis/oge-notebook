@@ -3,3 +3,4 @@
 
 # Base 
 pywps
+GDAL
