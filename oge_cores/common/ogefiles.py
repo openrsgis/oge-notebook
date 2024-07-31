@@ -126,3 +126,13 @@ class FeatureFile(InternalFile):
 
     def read_file(self):
         pass
+
+class File(InternalFile):
+    """基本文件类"""
+    def read_file(self):
+        pass
+
+class TableFile(InternalFile):
+    """表格文件类"""
+    def read_file(self):
+        pass

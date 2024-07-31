@@ -1,6 +1,6 @@
 from oge_cores.processes import request_format
 from oge_cores.coverage import Coverage, get_coverage_from_file
-
+from oge_cores.common.ogefiles import TextFile, TableFile,File
 
 def parse_input_args(arg_type: str, arg):
     arg_type = arg_type.lower()
@@ -15,11 +15,23 @@ def parse_input_args(arg_type: str, arg):
     if arg_type == "string":
         return str(arg)
 
-    if arg_type == "int":
+    if arg_type == "integer":
         return int(arg)
 
     if arg_type == "float":
         return float(arg)
+    
+    if arg_type == "boolean":
+        return str(arg)
+    
+    if arg_type == "file":
+        return File(arg,False)
+    
+    if arg_type == "text":
+        return TextFile(arg,False)
+    
+    if arg_type == "table":
+        return TableFile(arg,False)
 
 
 def parse_output_args(arg_type: str, arg):
@@ -36,12 +48,23 @@ def parse_output_args(arg_type: str, arg):
     if arg_type == "string":
         return arg
     
-    if arg_type == "int":
+    if arg_type == "integer":
         return int(arg)
     
     if arg_type == "float":
         return float(arg)
-
+    
+    if arg_type == "boolean":
+        return arg
+    
+    if arg_type == "file":
+        return File(arg,True)
+    
+    if arg_type == "text":
+        return TextFile(arg,True)
+    
+    if arg_type == "table":
+        return TableFile(arg,True)
 
 # TODO:这个解析要做优化，要能处理以args输入和kwargs格式输入的情况
 def inputs2request(input_formats: request_format.Requestformat, *args, **kwargs):
@@ -107,7 +130,7 @@ def response2outputs(output_dict: dict) -> dict:
     elif status == "SUCCESS":
         output_list = output_dict["result"]
         for item in output_list:
-            result_list.append(parse_output_args(item["type"], item["value"]))
+            result_list.append(parse_output_args(item["data_type"], item["value"]))
 
     return result_list
 

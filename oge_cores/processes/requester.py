@@ -67,7 +67,7 @@ class Requester:
     def get_models_inputs(self, process_name) -> request_format.Requestformat:
         # TODO:修改获取模型方法
         with open(
-            "C:\\Users\\滕宝鑫\\Desktop\\OGE\\oge-notebook\\oge-notebook\\oge_cores\\test\\test_data\\ImageFusion.json",
+            "C:\\Users\\滕宝鑫\\Desktop\\OGE\\oge-notebook\\oge-notebook\\oge_cores\\test\\test_data\\BayesClassifier.json",
             "r",
             encoding="utf-8",
         ) as file:
@@ -105,7 +105,7 @@ class Requester:
         input_json = {
             "identifier": process_name,
             "request_from": self.id,
-            "work_dir": self.work_dir,
+            "host_output_path": self.work_dir,
             "inputs": data,
             "mode": "sync",
         }
