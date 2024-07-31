@@ -7,6 +7,7 @@ import json
 
 from oge_cores.processes import request_format
 from oge_cores.processes import process_utils
+from oge_cores.config import config
 
 
 class Requester:
@@ -15,7 +16,7 @@ class Requester:
     # TODO: 从模型服务中心获取现有模型及元信息
     def __init__(self) -> None:
         # 从模型到地址的映射关系
-        self.models_endpoint: Dict[str, str] = {}
+        self._endpoint: str = config.endpoint
 
         # 从模型名称到输入的映射关系。第一位是进程id，后续是模型输入。输入输出最好都是动态地从数据库中获取。其次是从tomcat某个文件下获取。最后本地保存一份副本。
         self.models_input: Dict[str, list] = {}
@@ -44,7 +45,7 @@ class Requester:
         Returns:
             返回结果，可以返回多个键值对格式结果
         """
-        endpoint = self.get_models_endpoint(process_name)
+        endpoint = self.get_endpoint()
         if endpoint is None:
             raise KeyError(f"发生了一个错误：{process_name} 算子服务不存在！")
 
@@ -90,8 +91,8 @@ class Requester:
         return request_format.Requestformat(process_name)
 
     # 为空时返回None
-    def get_models_endpoint(self, process_name) -> str:
-        return ""
+    def get_endpoint(self) -> str:
+        return self._endpoint
 
     def post_wps(self, endpoint, process_name, data) -> dict:
         """发送post请求
