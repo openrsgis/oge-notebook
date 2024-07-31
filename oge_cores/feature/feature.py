@@ -7,10 +7,15 @@ from oge_cores.utils.geojson import *
 class Feature:
     """Feature类，包含几何信息和属性信息"""
 
-    def __init__(self, feature_crs=4326, feature_attribute=None, feature_geometry=None) -> None:
+    def __init__(
+        self,
+        feature_crs: str="EPSG:4326",
+        feature_attribute: dict=None,
+        feature_geometry: OGeometry=None
+    ) -> None:
         self.__geometry: oge_geometry.OGeometry = feature_geometry
         self.__attribute: dict = feature_attribute
-        self.__crs: int = feature_crs
+        self.__crs: str = feature_crs
     def set_geometry(self, feature_geometry: oge_geometry.OGeometry):
         """设置feature的几何信息
 
@@ -113,6 +118,7 @@ def get_feature_from_file(path: str) -> Feature:
     else:
         # 获取数据源中的第一个几何对象，一般一个数据源只有一个几何对象
         # 这里写的循环是为了日后方便修改
+        crs = "EPSG:" + data.Base["spatialReference"]
         features = data.Base["features"]
         # for feature in features:
         #     geometry = feature
@@ -122,4 +128,4 @@ def get_feature_from_file(path: str) -> Feature:
 
         ogemetry = OGeometry(geometry_type=geometry['geometry']['type'], get_feature_function=None, feature_file=feature_file)
 
-        return Feature(feature_crs=4326, feature_attribute=geometry['properties'], feature_geometry=ogemetry)
+        return Feature(feature_crs=crs, feature_attribute=geometry['properties'], feature_geometry=ogemetry)

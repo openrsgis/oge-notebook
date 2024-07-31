@@ -1,15 +1,15 @@
-from oge_cores.feature import oge_geometry
 from oge_cores.common.ogefiles import FeatureFile
-from osgeo import ogr
 from oge_cores.feature.feature import Feature
-from oge_cores.common import ogefiles
 from oge_cores.feature.oge_geometry import OGeometry
 from oge_cores.utils.geojson import GeoJson, geometry_to_geojson, geojson_to_geometry
 from osgeo.ogr import Geometry
-import json
+from oge_cores.utils import uuid4
 
-
-def from_geometry(feature_crs=None, feature_attribute=None, geometry: Geometry = None) -> Feature:
+def from_geometry(
+    geometry: Geometry = None,
+    feature_attribute=None,
+    feature_crs="EPSG:4326"
+    ) -> Feature:
     """
     将Geometry对象转为Feature对象, 同时将Feature对象以geojson格式保存到指定路径下
 
@@ -22,7 +22,8 @@ def from_geometry(feature_crs=None, feature_attribute=None, geometry: Geometry =
         Feature
     """
     # 指定保存feature对象的路径
-    path = "D:/JAVAprogram/oge-notebook/test.geojson"
+    path = f"./{uuid4.random_uuid()}.geojson"
+
     # 将Geometry对象以geojson格式保存到指定路径下
     geojson = geometry_to_geojson(geometry, feature_attribute=feature_attribute)
     geojson.save(path)

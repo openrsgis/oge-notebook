@@ -2,8 +2,7 @@
 
 from osgeo import ogr
 from oge_cores.common import ogefiles
-from oge_cores.utils.geojson import GeoJson, ogr_dir
-from oge_cores.utils.geojson import geojson_to_geometry
+from oge_cores.utils.geojson import GeoJson, ogr_dir, geojson_to_geometry
 
 
 class OGeometry(ogr.Geometry):
