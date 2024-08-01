@@ -1,6 +1,6 @@
 {
-  "identifier": "BayesClassifier",
-  "title": "Bayes Process",
+  "identifier": "DecisionTreeClassifier",
+  "title": "Decision Tree Process",
   "abstract": "Executes OpenCV based image processing using SAGA GIS",
   "version": "1.0.0",
   "use_docker": true,
@@ -72,6 +72,48 @@
       "formats": "txt",
       "optional": false,
       "default": null
+    },
+    {
+      "identifier": "MAX_DEPTH",
+      "title": "Max Depth",
+      "data_type": "integer",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "MIN_SAMPLES",
+      "title": "Min Samples",
+      "data_type": "integer",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "MAX_CATEGRS",
+      "title": "Max Categories",
+      "data_type": "integer",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "1SE_RULE",
+      "title": "1-SE Rule",
+      "data_type": "boolean",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "TRUNC_PRUNED",
+      "title": "Truncate Pruned",
+      "data_type": "boolean",
+      "optional": false,
+      "default": null
+    },
+    {
+      "identifier": "REG_ACCURACY",
+      "title": "Regression Accuracy",
+      "data_type": "float",
+      "optional": false,
+      "default": null
     }
   ],
   "outputs": [
@@ -103,36 +145,59 @@
   ],
   "execution": [
     {
-    "script": "docker exec strange_pare saga_cmd imagery_opencv 5",
-    "working_directory": "/mnt/storage/pythonAlgorithm",
-    "type": "docker",
-    "ignore_errors": true,
-    "parameters": [
-      "-FEATURES", "FEATURES",
-      "-NORMALIZE", "NORMALIZE",
-      "-MODEL_TRAIN", "MODEL_TRAIN",
-      "-TRAIN_SAMPLES", "TRAIN_SAMPLES",
-      "-TRAIN_AREAS", "TRAIN_AREAS",
-      "-TRAIN_CLASS", "TRAIN_CLASS",
-      "-TRAIN_BUFFER", "TRAIN_BUFFER",
-      "-MODEL_LOAD", "MODEL_LOAD",
-      "-MODEL_SAVE", "MODEL_SAVE",
-      "-CLASSES", "CLASSES",
-      "-CLASSES_LUT", "CLASSES_LUT"
-    ]
-  },
-  {
-    "script": "conda run -n cv python sdattotif.py",
-    "working_directory": "/root/svm/",
-    "parameters": [
-      "--imagePath", "CLASSES",
-      "--outputPath", "OUTPUT_TIF"
-    ]
-  }
+      "script": "docker exec strange_pare saga_cmd imagery_opencv 8",
+      "working_directory": "/mnt/storage/pythonAlgorithm",
+      "type": "docker",
+      "ignore_errors": true,
+      "parameters": [
+        "-FEATURES",
+        "FEATURES",
+        "-NORMALIZE",
+        "NORMALIZE",
+        "-MODEL_TRAIN",
+        "MODEL_TRAIN",
+        "-TRAIN_SAMPLES",
+        "TRAIN_SAMPLES",
+        "-TRAIN_AREAS",
+        "TRAIN_AREAS",
+        "-TRAIN_CLASS",
+        "TRAIN_CLASS",
+        "-TRAIN_BUFFER",
+        "TRAIN_BUFFER",
+        "-MODEL_LOAD",
+        "MODEL_LOAD",
+        "-MODEL_SAVE",
+        "MODEL_SAVE",
+        "-MAX_DEPTH",
+        "MAX_DEPTH",
+        "-MIN_SAMPLES",
+        "MIN_SAMPLES",
+        "-MAX_CATEGRS",
+        "MAX_CATEGRS",
+        "-1SE_RULE",
+        "1SE_RULE",
+        "-TRUNC_PRUNED",
+        "TRUNC_PRUNED",
+        "-REG_ACCURACY",
+        "REG_ACCURACY",
+        "-CLASSES",
+        "CLASSES",
+        "-CLASSES_LUT",
+        "CLASSES_LUT"
+      ]
+    },
+    {
+      "script": "conda run -n cv python sdattotif.py",
+      "working_directory": "/root/svm/",
+      "parameters": [
+        "--imagePath",
+        "CLASSES",
+        "--outputPath",
+        "OUTPUT_TIF"
+      ]
+    }
   ],
   "paths": {
-    "host_input_path": "/mnt/storage/pywps/inputs",
-    "host_output_path": "/mnt/storage/pywps/outputs",
     "container_external_path": "/mnt/storage/SAGA/sagaData",
     "container_internal_path": "/tmp/saga"
   }

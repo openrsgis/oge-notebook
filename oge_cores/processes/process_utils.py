@@ -25,7 +25,7 @@ def parse_input_args(arg_type: str, arg):
         return float(arg)
     
     if arg_type == "boolean":
-        return str(arg)
+        return arg
     
     if arg_type == "file":
         return File(arg,False)
