@@ -1,0 +1,25 @@
+{
+    "completionTime": "2024-08-01T15:44:23.378Z",
+    "identifier": "DecisionTreeClassifier",
+    "jobId": "35669fecc36a4e759c52dc70715b9ee0",
+    "message": "PyWPS Process Decision Tree Process finished",
+    "result": [
+        {
+            "data_type": "file",
+            "name": "CLASSES",
+            "value": "/outputs/DecisionTreeClassifier-CLASSES-091bf45c9607498d918fe29c11bb101d.sdat"
+        },
+        {
+            "data_type": "table",
+            "name": "CLASSES_LUT",
+            "value": "/outputs/DecisionTreeClassifier-CLASSES_LUT-8fe48e2e450045c681d5efe01205ace7.dbf"
+        },
+        {
+            "data_type": "coverage",
+            "name": "OUTPUT_TIF",
+            "value": "/outputs/DecisionTreeClassifier-OUTPUT_TIF-3023cb11af434e84a8b8ee9abda9715c.tif"
+        }
+    ],
+    "status": "SUCCESS",
+    "timestamp": 1722498263.394196
+}

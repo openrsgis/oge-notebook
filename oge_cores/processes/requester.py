@@ -4,6 +4,7 @@ from typing import Dict
 from pywps import Service, ComplexInput, LiteralInput
 import requests
 import json
+import sys
 
 from oge_cores.processes import request_format
 from oge_cores.processes import process_utils
@@ -25,7 +26,7 @@ class Requester:
         self.models_output: Dict[str, list] = {}
         self.update_models()
         self.update_models_endpoint()
-        self.work_dir = "dir"  # 工作路径，即临时文件保存路径。脚本可以直接读取本地配置文件，获取配置信息。要不要脚本和临时文件在一个路径下？
+        self.work_dir = config.work_dir  # 工作路径，即临时文件保存路径。脚本可以直接读取本地配置文件，获取配置信息。要不要脚本和临时文件在一个路径下？
         self.id = "id"  # jupyter调用者id
 
     # TODO: 从模型服务中心获取现有模型地址。第一次更新后，每次调用请求失败时触发该请求
@@ -68,7 +69,7 @@ class Requester:
     def get_models_inputs(self, process_name) -> request_format.Requestformat:
         # TODO:修改获取模型方法
         with open(
-            "C:\\Users\\滕宝鑫\\Desktop\\OGE\\oge-notebook\\oge-notebook\\oge_cores\\test\\test_data\\BayesClassifier.json",
+            "C:\\Users\\滕宝鑫\\Desktop\\OGE\\oge-notebook\\oge-notebook\\oge_cores\\test\\test_data\\DecisionTreeClassifier.json",
             "r",
             encoding="utf-8",
         ) as file:
@@ -102,7 +103,7 @@ class Requester:
         data(dict): 请求参数
         """
         # 格式转换
-        data = [{key: value} for key, value in data.items()]
+        data = data
         input_json = {
             "identifier": process_name,
             "request_from": self.id,
@@ -110,15 +111,38 @@ class Requester:
             "inputs": data,
             "mode": "sync",
         }
+        # print(json.dumps(data))
         json_data = json.dumps(input_json)
-        response = self.post(endpoint, json_data, 60)
+        print(json_data)
+        try:
+            response = self.post(endpoint, json_data, 60)
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            if err.response.status_code == 500:
+                print(f"算子调用过程出现内部错误: 502")
+            elif err.response.status_code == 502:
+                print(f"发生HTTP错误: 502")
+
+            sys.exit(1)
+        if response.status_code == 200:
+            res = json.loads(response.text)
+
+            if res["status"] == "FAILED":
+                raise ValueError(
+                    f"{res['identifier']}算子调用时出现错误：{res['message']}"
+                )
+
+            if res["status"] == "ERROR":
+                raise ValueError(
+                    f"{res['identifier']}算子执行过程中出现错误：{res['message']}"
+                )
+
         return json.loads(response.text)
 
     def post(self, endpoint, data, timeout=60):
-        json_data = json.dumps(data)
         response = requests.post(
             endpoint,
-            data=json_data,
+            data=data,
             headers={"Content-Type": "application/json"},
             timeout=timeout,
         )
