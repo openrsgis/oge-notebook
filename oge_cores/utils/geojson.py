@@ -320,7 +320,7 @@ def geojson_2_polygon(coordinates):
         geometry_line = ogr.Geometry(ogr.wkbLinearRing)
 
         for point in line:
-            geometry_line.AddPoint(point[0], point[1], point[2])
+            geometry_line.AddPoint(point[0], point[1])
         polygon.AddGeometry(geometry_line)
 
     return polygon
@@ -340,7 +340,7 @@ def geojson_2_point(coordinates):
 
     # 填充点
     point = coordinates
-    points.AddPoint(point[0], point[1], point[2])
+    points.AddPoint(point[0], point[1])
 
     return points
 
@@ -359,14 +359,15 @@ def geojson_2_line(coordinates):
 
     # 填充线
     for point in coordinates:
-        line.AddPoint(point[0], point[1], point[2])
+        line.AddPoint(point[0], point[1])
 
     return line
 
 
 def check_type(type, coordinates):
     """检查geojson保存数据的type和保存的type类型是否一致"""
-    list_num = sum(isinstance(item, list) for item in coordinates)
+    
+    list_num = get_list_depth(coordinates)
     flag = True
     if list_num == 0:
         flag = (type == ogr_dir["POINT"])
@@ -377,3 +378,15 @@ def check_type(type, coordinates):
     if not flag:
         raise TypeError("Geometry_type doesn't match coordinates, please check your geojson."
                         "Point must have one point. Line must have two points. Polygon have more than two points")
+
+
+def get_list_depth(lst):
+    if not isinstance(lst, list):  # 如果不是列表，返回0
+        return 0
+    
+    max_depth = 0  # 用于记录最大深度
+    for element in lst:
+        depth = get_list_depth(element)  # 递归地获取子列表的深度
+        max_depth = max(max_depth, depth + 1)  # 更新最大深度
+        
+    return max_depth
